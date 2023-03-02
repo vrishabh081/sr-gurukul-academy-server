@@ -33,16 +33,25 @@ const getSingleStudents = async(req, res)=>{
 
 
 // submit form and take addmission-
-const takeAddmissionDetails = async(req, res)=>{
+const takeAddmissionDetails = (req, res)=>{
     const payload = req.body;
-    const {studentAdhaarCard, parentAdhaarCard, mobileNumber1, mobileNumber2} = req.body;
+    const {
+        studentName,
+        dob, 
+        studentClass,
+        studentPhoto
+    } = req.body;
+
+    if(!studentName || !dob || !studentClass)
+    {
+        return res.status(422).json({error: "Please fill all details"});   
+    }
     
     // check if student's details are already in database-
-    StudentFormModel.findOne({$and: [{studentAdhaarCard}, {parentAdhaarCard}, {mobileNumber1}, {mobileNumber2}]})
+    StudentFormModel.findOne({$and: [{studentPhoto}]})
     .then((existingStudent)=>{
         if(existingStudent)
         {
-            console.warn("This student has already taken addmission");
             return (res.status(401).json({error: "This student has already taken addmission"}))
         }
         else
