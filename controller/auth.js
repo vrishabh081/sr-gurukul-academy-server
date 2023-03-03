@@ -77,8 +77,8 @@ const signUp = (req, res) => {
               var mailOptions = {
                 from: process.env.authMail,
                 to: email,
-                subject: "Merchanto, successfully registeration!",
-                text: `Hi, ${name},You have successfully registered in merchanto.`,
+                subject: "SR Gurukul Academy, successfully registeration!",
+                text: `Hi, ${name},You have successfully registered in SR Gurukul Academy.`,
               };
 
               transporter.sendMail(mailOptions, function (error, info) {
@@ -154,8 +154,8 @@ const signIn = (req, res) => {
                 var mailOptions = {
                   from: process.env.authMail,
                   to: email,
-                  subject: "Merchanto, logged in OTP!",
-                  text: `Hi SR Gurukul Team, Your OTP is ${randomOtp}.`,
+                  subject: "SR Gurukul Academy, logged in OTP!",
+                  text: `Hi ${userData.name}, Your OTP is ${randomOtp}.`,
                 };
   
                 transporter.sendMail(mailOptions, function (error, info) {
@@ -186,5 +186,17 @@ const signIn = (req, res) => {
     });
 };
 
+
+// demo-
+const demo = (req, res)=>{
+  const payload = req.body;
+  let randomOtp = Math.floor(100000 + Math.random() * 900000);
+
+  bcrypt.hash(randomOtp, 10).then((hashedOtp)=>{
+    res.json({message: "Hello", payload, randomOtp, hashedOtp});
+  })
+
+}
+
 // export-
-module.exports = { signUp, signIn };
+module.exports = { signUp, signIn, demo };
