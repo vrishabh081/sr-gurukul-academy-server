@@ -120,7 +120,7 @@ const signIn = (req, res) => {
     email
   );
   if (!emailVarify) {
-    res.status(422).json({ error: "Email is not valid" });
+    res.status(422).json({ error: "Please fill valid email address" });
     console.log("Email is not valid");
     return;
   }
@@ -187,16 +187,53 @@ const signIn = (req, res) => {
 };
 
 
-// demo-
-const demo = (req, res)=>{
-  const payload = req.body;
-  let randomOtp = Math.floor(100000 + Math.random() * 900000);
+// forget password-
+const forgetPassword = (req, res)=>{
+  const {email, password1, password2} = req.body;
+  if(!email || !password1 || !password2)
+  {
+    return res.status(422).json({ error: "Please fill all details" });
+  }
 
-  bcrypt.hash(randomOtp, 10).then((hashedOtp)=>{
-    res.json({message: "Hello", payload, randomOtp, hashedOtp});
+  // varification with regex code-
+  const emailVarify = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+  const passwordVarify = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/.test(password1);
+
+  if(!emailVarify)
+  {
+    return res.status(422).json({ error: "Please fill valid email address" });
+  }
+  if(!passwordVarify)
+  {
+    return res.status(422).json({error: "Password should contain 1 lowercase, 1 upercase, 1 numeric character, 1 special character and atleast 8 characters"});
+  }
+
+  // check is both password is matching or not-
+  if(password1 !== password2)
+  {
+    return res.status(422).json({ error: "Both password is not matching, Please check once again!" });
+  }
+
+  // find details with this email-
+  RegisterModel.findOne({email}).then(existedUser=>{
+    if(!existedUser)
+    {
+      return res.status(422).json({ error: "Email does not exist" });
+    }
+    else
+    {
+      bcrypt.hash(password1, 10).then((hashedPassword)=>{
+        if(hashedPassword)
+        {
+          existedUser.password = hashedPassword;
+          existedUser.save();
+          console.log("Successfully password changed");
+          return res.json({message: "Successfully password changed"})
+        }
+      })
+    }
   })
-
 }
 
 // export-
-module.exports = { signUp, signIn, demo };
+module.exports = { signUp, signIn, forgetPassword };
