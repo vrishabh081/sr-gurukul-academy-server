@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
-var x = new Date(new Date());
-let date = x.toLocaleDateString();
+let currentTime = new Date();
+let currentDate = currentTime.getDate();
+let currentMonth = currentTime.getMonth() + 1;
+let currentYear = currentTime.getFullYear();
+
+let x = (`${currentDate}/${currentMonth}/${currentYear}`)
 
 // Schema-
 const studentFormSchema = mongoose.Schema({
@@ -20,7 +24,7 @@ const studentFormSchema = mongoose.Schema({
     address: {type: String},
     createdAt: {
         type: String,
-        default: date
+        default: x
     }
 })
 
