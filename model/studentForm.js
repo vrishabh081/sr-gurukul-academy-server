@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 let currentTime = new Date();
-let currentDate = currentTime.getDate();
-let currentMonth = currentTime.getMonth() + 1;
-let currentYear = currentTime.getFullYear();
+    let currentDate = currentTime.getDate();
+    let currentMonth = currentTime.getMonth() + 1;
+    let currentYear = currentTime.getFullYear();
 
-let x = (`${currentDate}/${currentMonth}/${currentYear}`)
+    let x = (`${currentDate}/${currentMonth}/${currentYear}`)
 
 // Schema-
 const studentFormSchema = mongoose.Schema({

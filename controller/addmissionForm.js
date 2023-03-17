@@ -4,14 +4,24 @@ const StudentFormModel = require("../model/studentForm");
 const getAllStudents = async(req, res)=>{
     try
     {
-        const allStudents = await StudentFormModel.find();
+        let query = {};
+        if(req.query.keyword)
+        {
+            query.$or = [
+                {"studentClass": {$regex: req.query.keyword, $options: "i"}},
+                {"studentName": {$regex: req.query.keyword, $options: "i"}}
+            ]
+        }
+
+        const allStudents = await StudentFormModel.find(query)
         console.log("All students");
-        res.json(allStudents);
+        console.log(req.query);
+        return res.json(allStudents);
     }
     catch(error)
     {
         console.log(error);
-        res.json({error: "OOP's somthing went wrong"})
+        return res.json({error: "OOP's somthing went wrong"})
     }
 }
 
